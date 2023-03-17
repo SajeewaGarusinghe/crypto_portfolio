@@ -1,0 +1,28 @@
+{
+  "name": "crypto_portfolio",
+  "version": "1.0.0",
+  "description": "ATTEMPT IS TO CREATE NODE APPLICATION TO READ FROM LARGE CSV FILE AND PROCESS THOSE DATA",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SajeewaGarusinghe/crypto_portfolio.git"
+  },
+  "author": "sajeewa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SajeewaGarusinghe/crypto_portfolio/issues"
+  },
+  "homepage": "https://github.com/SajeewaGarusinghe/crypto_portfolio#readme",
+  "dependencies": {
+    "csv-parse": "^5.3.6",
+    "yargs": "^17.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
