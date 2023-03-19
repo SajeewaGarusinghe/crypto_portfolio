@@ -1,5 +1,5 @@
 const { getAllTokenBalance } = require('./getAllToken');
- 
+const { getSingleTokenBalance } = require('./getSingleToken');
 
-getAllTokenBalance();
- 
+// getAllTokenBalance();
+getSingleTokenBalance('BTC');

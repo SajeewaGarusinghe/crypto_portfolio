@@ -7,7 +7,7 @@ const getCryptoExchangeRateSingle = async (forCurrency) => {
   const response = await axios.get(
     `https://min-api.cryptocompare.com/data/price?fsym=${forCurrency}&tsyms=USD&api_key=${API_KEY}`
   );
-  console.log(response.data['USD']);
+  // console.log(response.data['USD']);
   return response.data['USD'];
 };
 const getCryptoExchangeRateMulti = async (forCurrencies) => {
