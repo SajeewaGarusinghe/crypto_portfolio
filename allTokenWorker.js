@@ -16,15 +16,15 @@ fs.createReadStream(fileName)
 
     if (balance[token]) {
       if (transaction_type == 'DEPOSIT') {
-        balance[token]['value'] += amount;
+        balance[token] += amount;
       } else {
-        balance[token]['value'] -= amount;
+        balance[token] -= amount;
       }
     } else {
       if (transaction_type == 'DEPOSIT') {
-        balance[token] = { value: amount };
+        balance[token] =  amount ;
       } else {
-        balance[token] = { value: -amount };
+        balance[token] = -amount ;
       }
     }
   })
