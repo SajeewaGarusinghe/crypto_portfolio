@@ -11,7 +11,7 @@ fs.createReadStream(fileName)
   .on('data', function (row) {
     const token = row[2].toString();
     if (token == tokenID) {
-      // const timestamp = row[0];
+
       const transaction_type = row[1].toString();
       const amount = parseFloat(row[3]);
 

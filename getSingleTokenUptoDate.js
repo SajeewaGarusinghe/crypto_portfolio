@@ -1,19 +1,21 @@
 const { Worker } = require('worker_threads');
 const fs = require('fs');
-const { getCryptoExchangeRateSingle } = require('./apiCall');
+const { getCryptoExchangeRateSingleHistoric } = require('./apiCall');
 
-// const os = require('os');
+const API_KEY =
+  'd9b6a02d8bda1f6dafd2fbd91a356f8fda25d349f48b3725e2ad8f8bd2364590';
+
 const path = require('path');
 
 const fileName = 'transactions.csv';
+const workers = [];
 
-// const numCPUs = os.cpus().length;
-const getSingleTokenBalance = (token) => {
+const getSingleTokenUptoDate = (time_stamp, tokenID) => {
   let balance = 0;
   const startTime = new Date();
-  const latestData = getCryptoExchangeRateSingle(token);
-  // const numCPUs = os.cpus().length;
-  const numCPUs = 6;
+  const latestData = getCryptoExchangeRateSingleHistoric(tokenID, time_stamp);
+
+  const numCPUs = 5;
   const upto = 30000000;
   const range = parseInt(upto / numCPUs);
   const addEnd = upto % numCPUs;
@@ -38,14 +40,33 @@ const getSingleTokenBalance = (token) => {
     if (i == numCPUs) {
       end += addEnd;
     }
-   
 
-    const worker = new Worker(path.join(__dirname, 'singleTokenWorker.js'), {
-      workerData: { fileName, tokenID: token, fromLine: start, toLine: end },
-    });
+    const worker = new Worker(
+      path.join(__dirname, 'singleTokenUptoDateWorker.js'),
+      {
+        workerData: {
+          fileName,
+          time_stamp,
+          fromLine: start,
+          toLine: end,
+          workerIndex: i - 1,
+          tokenID,
+        },
+      }
+    );
+    workers.push(worker);
+ 
 
-    worker.on('message', (result) => {
-      //  console.log(result);
+    worker.on('message', ({ result, terminateBegin }) => {
+      if (terminateBegin) {
+        for (j = terminateBegin; j < numCPUs; j++) {
+          workerCompleted++;
+          workers[j].terminate();
+        }
+      }
+
+      // console.log('balance>>', result);
+      // console.log('terminateBegin>>', terminateBegin);
       balance += result;
     });
 
@@ -55,13 +76,11 @@ const getSingleTokenBalance = (token) => {
 
     worker.on('exit', () => {
       workerCompleted++;
-
       if (workerCompleted === numCPUs) {
         latestData
           .then((usd_rate) => {
-            let portfolioValueInUSD = (usd_rate * balance).toFixed(1);
-
-            console.log(`${token} : ${portfolioValueInUSD} $`);
+            let portfolioValueInUSD = (balance * usd_rate).toFixed(1);
+            console.log(`${tokenID} : ${portfolioValueInUSD} $`);
           })
           .catch((e) => console.log(e.message, 'sajeewa'))
           .finally(() => {
@@ -75,5 +94,5 @@ const getSingleTokenBalance = (token) => {
 };
 
 module.exports = {
-  getSingleTokenBalance,
+  getSingleTokenUptoDate,
 };
