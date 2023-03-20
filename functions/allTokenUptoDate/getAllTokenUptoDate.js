@@ -1,22 +1,20 @@
 const { Worker } = require('worker_threads');
 const fs = require('fs');
-const { getCryptoExchangeRateMulti } = require('./apiCall');
+const { getCryptoExchangeRateMulti } = require('../../apiCall');
 
-const axios = require('axios');
 const API_KEY =
   'd9b6a02d8bda1f6dafd2fbd91a356f8fda25d349f48b3725e2ad8f8bd2364590';
 
-// const os = require('os');
 const path = require('path');
 
 const fileName = 'transactions.csv';
+const workers = [];
 
-// const numCPUs = os.cpus().length;
-const getAllTokenBalance = () => {
+const getAllTokenUptoDate = (time_stamp) => {
   const balance = {};
   const startTime = new Date();
   const latestData = getCryptoExchangeRateMulti('BTC,ETH,XRP');
-  // const numCPUs = os.cpus().length;
+
   const numCPUs = 5;
   const upto = 30000000;
   const range = parseInt(upto / numCPUs);
@@ -42,14 +40,32 @@ const getAllTokenBalance = () => {
     if (i == numCPUs) {
       end += addEnd;
     }
-    // console.log(`start ${start}  end ${end}`);
 
-    const worker = new Worker(path.join(__dirname, 'allTokenWorker.js'), {
-      workerData: { fileName, fromLine: start, toLine: end },
-    });
+    const worker = new Worker(
+      path.join(__dirname, 'allTokenUptoDateWorker.js'),
+      {
+        workerData: {
+          fileName,
+          time_stamp,
+          fromLine: start,
+          toLine: end,
+          workerIndex: i - 1,
+        },
+      }
+    );
+    workers.push(worker);
 
-    worker.on('message', (result) => {
-      // console.log(result);
+
+    worker.on('message', ({ result, terminateBegin }) => {
+      if (terminateBegin) {
+        for (j = terminateBegin; j < numCPUs; j++) {
+          workerCompleted++;
+          workers[j].terminate();
+        }
+      }
+      // console.log('balance>>', balance);
+      // console.log('terminateBegin>>', terminateBegin);
+
       for (let token in result) {
         if (balance[token]) {
           balance[token] += result[token];
@@ -65,7 +81,6 @@ const getAllTokenBalance = () => {
 
     worker.on('exit', () => {
       workerCompleted++;
-
       if (workerCompleted === numCPUs) {
         latestData
           .then((usd_rates) => {
@@ -83,14 +98,13 @@ const getAllTokenBalance = () => {
             console.log('Execution time: %ds', end / 1000);
             console.log(balance);
           });
-
       }
     });
   }
 };
 
-//stable version
 
 module.exports = {
-  getAllTokenBalance,
+  getAllTokenUptoDate,
+  workers,
 };

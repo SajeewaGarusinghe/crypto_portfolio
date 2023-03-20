@@ -1,6 +1,6 @@
 const { Worker } = require('worker_threads');
 const fs = require('fs');
-const { getCryptoExchangeRateSingle } = require('./apiCall');
+const { getCryptoExchangeRateSingle } = require('../../apiCall');
 
 // const os = require('os');
 const path = require('path');

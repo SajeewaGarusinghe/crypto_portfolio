@@ -1,8 +1,8 @@
 const yargs = require('yargs');
-const { getAllTokenBalance } = require('./getAllToken');
-const { getSingleTokenBalance } = require('./getSingleToken');
-const { getAllTokenUptoDate } = require('./getAllTokenUptoDate');
-const { getSingleTokenUptoDate } = require('./getSingleTokenUptoDate');
+const { getAllTokenBalance } = require('./functions/allToken/getAllToken');
+const { getSingleTokenBalance } = require('./functions/singleToken/getSingleToken');
+const { getAllTokenUptoDate } = require('./functions/allTokenUptoDate/getAllTokenUptoDate');
+const { getSingleTokenUptoDate } = require('./functions/singleTokenUptoDate/getSingleTokenUptoDate');
 
 yargs.command({
   command: 'token <token>',

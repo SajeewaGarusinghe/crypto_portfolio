@@ -1,6 +1,6 @@
 const { Worker } = require('worker_threads');
 const fs = require('fs');
-const { getCryptoExchangeRateSingleHistoric } = require('./apiCall');
+const { getCryptoExchangeRateSingleHistoric } = require('../../apiCall');
 
 const API_KEY =
   'd9b6a02d8bda1f6dafd2fbd91a356f8fda25d349f48b3725e2ad8f8bd2364590';
