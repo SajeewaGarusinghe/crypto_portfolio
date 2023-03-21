@@ -1,0 +1,232 @@
+const readline = require('readline');
+const yargs = require('yargs');
+const { readCsvFile } = require('./readCsvFile');
+const {
+  getCryptoExchangeRateMulti,
+  getCryptoExchangeRateSingle,
+  getCryptoExchangeRateSingleHistoric,
+} = require('./apiCall');
+
+// const { loadingAnimation } = require('./loadingAnimation');
+
+let cumulativeBalances = {};
+let latestBalance = {};
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function askForCommand() {
+  rl.question(
+    "Enter a command 'latest','token','date' or 'both' and relevant arguments: ",
+    (command) => {
+      const argv = yargs
+        .command(
+          'latest',
+          'Log the latest portfolio value per token in USD',
+          {}
+        )
+
+        .command(
+          'token',
+          'log the latest portfolio value for given token in USD',
+          {
+            token: {
+              describe: 'lattest balance required token',
+              //   demandOption: true,
+              type: 'String',
+            },
+          }
+        )
+        .command(
+          'date',
+          'log the portfolio value per token in USD on that date',
+          {
+            date: {
+              describe: 'latest balance required date',
+              //   demandOption: true,
+              type: 'String',
+            },
+          }
+        )
+        .command(
+          'both',
+          'log the portfolio value of that token in USD on that date',
+          {
+            token: {
+              describe: 'lattest balance required token',
+              //   demandOption: true,
+              type: 'String',
+            },
+            date: {
+              describe: 'latest balance required date',
+              //   demandOption: true,
+              type: 'String',
+            },
+          }
+        )
+        .command('close', 'close the application', {})
+        .help()
+        .parse(command);
+
+      if (argv._[0] === 'latest') {
+        console.log('op 1');
+        option1();
+        // console.log(latestBalance);
+      } else if (argv._[0] === 'token') {
+        console.log('op 2');
+        if (argv.token) {
+          console.log(argv.token);
+          option2(argv.token);
+        } else {
+          console.log('Invalid parameters. Type --token=<token>');
+          askForCommand();
+        }
+      } else if (argv._[0] === 'date') {
+        console.log('op 3');
+
+        if (argv.date) {
+          console.log(argv.date);
+        } else {
+          console.log('Invalid parameters. Type:  date --date=<date>');
+        }
+      } else if (argv._[0] === 'both') {
+        console.log('op 4');
+        if (argv.token && argv.date) {
+          console.log(argv.token);
+          console.log(argv.date);
+          option4(argv.date, argv.token);
+        } else {
+          console.log(
+            'Invalid parameters. Type:  both --token=<token> --date=<date>'
+          );
+          askForCommand();
+        }
+      } else if (argv._[0] === 'close') {
+        console.log('application closing ...');
+        rl.close();
+        process.exit(1);
+      } else {
+        console.log(
+          "Invalid command. Type 'latest','token','date' or 'both' and relevant arguments"
+        );
+      }
+    }
+  );
+}
+
+function loadingAnimation() {
+  let i = 0;
+  const animation = setInterval(() => {
+    readline.cursorTo(process.stdout, 0);
+    i = (i + 1) % 4;
+    const dots = new Array(i + 1).join('.');
+    process.stdout.write(`Loading csv file ${dots}`);
+  }, 500);
+  return animation;
+}
+
+function getBalance(dateString, token) {
+  const keys = Object.keys(cumulativeBalances);
+  const enteredDate = new Date(dateString);
+  let nearestDate;
+
+  for (let i = keys.length - 1; i >= 0; i--) {
+    const keyDate = new Date(keys[i]);
+    if (keyDate <= enteredDate) {
+      nearestDate = keys[i];
+      break;
+    }
+  }
+
+  if (token) {
+    return cumulativeBalances[nearestDate][token]
+      ? cumulativeBalances[nearestDate][token]
+      : 0;
+  } else {
+    return cumulativeBalances[nearestDate];
+  }
+}
+
+// Start loading animation
+const animation = loadingAnimation();
+
+const promise = readCsvFile('transactions.csv');
+promise
+  .then(({ results, cumulativeBalance }) => {
+    clearInterval(animation);
+    console.log('CSV file read and processed.');
+    cumulativeBalances = results;
+    latestBalance = cumulativeBalance;
+    // console.log(cumulativeBalances);
+
+    // Do something with the processed data
+    askForCommand();
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+async function option1() {
+  let tokens = '';
+  for (let token in latestBalance) {
+    tokens += token + ',';
+  }
+  const usdRates = await getCryptoExchangeRateMulti(tokens);
+  let portfolioValueInUSD;
+  for (let token in latestBalance) {
+    portfolioValueInUSD = (latestBalance[token] * usdRates[token]).toFixed(1);
+    console.log(`${token} : ${portfolioValueInUSD} $`);
+  }
+  askForCommand();
+}
+async function option2(token) {
+  const usdRate = await getCryptoExchangeRateSingle(token);
+  let portfolioValueInUSD = (latestBalance[token] * usdRate).toFixed(1);
+  console.log(`${token} : ${portfolioValueInUSD} $`);
+  askForCommand();
+}
+
+async function option3(dateString) {
+  const balance = getBalance(dateString);
+
+  let tokens = '';
+  for (let token in balance) {
+    tokens += token + ',';
+  }
+  const usdRates = await getCryptoExchangeRateSingleHistoric(tokens);
+  let portfolioValueInUSD;
+  for (let token in latestBalance) {
+    portfolioValueInUSD = (latestBalance[token] * usdRates[token]).toFixed(1);
+    console.log(`${token} : ${portfolioValueInUSD} $`);
+  }
+  askForCommand();
+}
+async function option4(dateString, token) {
+  const balance = getBalance(dateString, token);
+  const [year, month, day] = dateString.split('/');
+  const dateObject = new Date(`${year}-${month}-${day}`);
+  const timeStamp = dateObject.getTime();
+
+  const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
+  let portfolioValueInUSD = (balance * usdRate).toFixed(1);
+  console.log(`${token} : ${portfolioValueInUSD} $`);
+  askForCommand();
+}
+
+// async function option1() {
+//   let coins = '';
+//   for (let coin in latestBalance) {
+//     coins += coin + ',';
+//   }
+//   getCryptoExchangeRateMulti(coins).then((usdRates) => {
+//     console.log(usdRates);
+//     // console.log(latestBalance);
+//     let portfolioValueInUSD;
+//     for (let coin in latestBalance) {
+//       portfolioValueInUSD = (latestBalance[coin] * usdRates[coin]).toFixed(1);
+//       console.log(`${coin} : ${portfolioValueInUSD} $`);
+//     }
+//   });
+// }

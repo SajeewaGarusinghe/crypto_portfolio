@@ -7,7 +7,7 @@ const getCryptoExchangeRateSingle = async (forCurrency) => {
   const response = await axios.get(
     `https://min-api.cryptocompare.com/data/price?fsym=${forCurrency}&tsyms=USD&api_key=${API_KEY}`
   );
-  // console.log(response.data['USD']);
+  console.log(response.data['USD']);
   return response.data['USD'];
 };
 const getCryptoExchangeRateMulti = async (forCurrencies) => {
@@ -18,7 +18,7 @@ const getCryptoExchangeRateMulti = async (forCurrencies) => {
   const transformedData = Object.fromEntries(
     Object.entries(response.data).map(([key, value]) => [key, value.USD])
   );
-
+  // console.log(response.data);
   return transformedData;
 };
 
@@ -35,3 +35,6 @@ module.exports = {
   getCryptoExchangeRateMulti,
   getCryptoExchangeRateSingleHistoric,
 };
+
+
+'https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC,ETH&tsym=USD&limit=30'
