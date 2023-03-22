@@ -132,27 +132,29 @@ async function option3(dateString) {
   const balance = getBalance(dateString);
 
   if (balance) {
-    let usd_rates = {};
+    let usdRate;
 
-    const [year, month, day] = dateString.split('/');
-    const dateObject = new Date(`${year}-${month}-${day}`);
-    const timeStamp = dateObject.getTime();
+    const timeStamp = getTimestamp(dateString);
 
-    let tokens = '';
-    let portfolioValueInUSD = '';
-    for (let token in balance) {
-      usd_rates[token] = await getCryptoExchangeRateSingleHistoric(
-        token,
-        timeStamp
+    if (+timeStamp < 1279391400) {
+      logError(
+        'Data not available in the crypto compare API beyond Sunday, July 18, 2010 12:00:00 AM GMT+05:30'
       );
-      if (usd_rates[token]) {
-        portfolioValueInUSD += `${token}: ${(
-          balance[token] * usd_rates[token]
-        ).toFixed(1)} $\n`;
+    } else {
+      let tokens = '';
+      let portfolioValueInUSD = '';
+      for (let token in balance) {
+        usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
+        if (usdRate || usdRate == 0) {
+          // console.log('usdrate', usdRate);
+          portfolioValueInUSD += `${token}: ${(
+            balance[token] * usdRate
+          ).toFixed(1)} $\n`;
+        }
       }
-    }
-    if (portfolioValueInUSD != '') {
-      logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
+      if (portfolioValueInUSD != '') {
+        logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
+      }
     }
   }
 
@@ -164,20 +166,37 @@ async function option4(dateString, token) {
   token = token.toString().toUpperCase();
   const balance = getBalance(dateString, token);
   if (balance) {
-    const [year, month, day] = dateString.split('/');
-    const dateObject = new Date(`${year}-${month}-${day}`);
-    const timeStamp = dateObject.getTime();
-    // console.log('dateObject', dateObject);
-    // console.log('timestamp', timeStamp);
-    const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
+    const timeStamp = getTimestamp(dateString);
 
-    if (usdRate) {
-      let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
-      logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+    if (+timeStamp < 1279391400) {
+      logError(
+        'Data not available in the crypto compare API beyond Sunday, July 18, 2010 12:00:00 AM GMT+05:30'
+      );
+    } else {
+      const usdRate = await getCryptoExchangeRateSingleHistoric(
+        token,
+        timeStamp
+      );
+
+      if (usdRate || usdRate == 0) {
+        let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
+        logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+      }
     }
   }
 
   askForCommand();
+}
+
+//------------get TimeStamp---------------
+
+function getTimestamp(dateString) {
+  const [year, month, day] = dateString.split('/');
+  const dateObject = new Date(`${year}-${month}-${day}`);
+  const timeStamp = dateObject.getTime() / 1000;
+  // console.log(timeStamp);
+
+  return timeStamp;
 }
 
 //------------loading Animation-----------

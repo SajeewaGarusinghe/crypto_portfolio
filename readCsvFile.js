@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const numCPUs = parseInt(os.cpus().length / 2) || 4;
-const upto = 3000;
+const upto = 35000000;
 
 const balanceOnDates = {};
 
