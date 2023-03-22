@@ -140,18 +140,12 @@ async function option1() {
   const usdRates = await getCryptoExchangeRateMulti(tokens);
   let portfolioValueInUSD = '';
   for (let token in latestBalance) {
-    portfolioValueInUSD += `${token} :${(
+    portfolioValueInUSD += `${token}: ${(
       latestBalance[token] * usdRates[token]
     ).toFixed(1)} $\n`;
   }
-  console.log(
-    boxen(chalk.whiteBright.bold(portfolioValueInUSD), {
-      // padding: 1,
-      // margin: 1,
-      borderStyle: 'double',
-    })
-  );
-  // console.log(latestBalance);
+
+  logWithBox('Latest Balance', portfolioValueInUSD);
   askForCommand();
 }
 //----------option-2-----------------
@@ -159,8 +153,8 @@ async function option1() {
 async function option2(token) {
   token = token.toUpperCase();
   const usdRate = await getCryptoExchangeRateSingle(token);
-  let portfolioValueInUSD = (latestBalance[token] * usdRate).toFixed(1);
-  console.log(`${token} : ${portfolioValueInUSD} $`);
+  let portfolioValueInUSD = (latestBalance[token] * usdRate).toFixed(1) + ' $';
+  logWithBox(`Latest ${token} Balance `, portfolioValueInUSD);
   askForCommand();
 }
 
@@ -175,16 +169,17 @@ async function option3(dateString) {
   const timeStamp = dateObject.getTime();
 
   let tokens = '';
-  let portfolioValueInUSD;
+  let portfolioValueInUSD = '';
   for (let token in balance) {
     usd_rates[token] = await getCryptoExchangeRateSingleHistoric(
       token,
       timeStamp
     );
-    portfolioValueInUSD = (balance[token] * usd_rates[token]).toFixed(1);
-    console.log(`${token} : ${portfolioValueInUSD} $`);
+    portfolioValueInUSD += `${token}: ${(
+      balance[token] * usd_rates[token]
+    ).toFixed(1)} $\n`;
   }
-  console.log('balance', balance);
+  logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
   askForCommand();
 }
 
@@ -195,11 +190,9 @@ async function option4(dateString, token) {
   const [year, month, day] = dateString.split('/');
   const dateObject = new Date(`${year}-${month}-${day}`);
   const timeStamp = dateObject.getTime();
-
   const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
-  let portfolioValueInUSD = (balance * usdRate).toFixed(1);
-  console.log(`${token} : ${portfolioValueInUSD} $`);
-  console.log('balance', balance);
+  let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
+  logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
   askForCommand();
 }
 
@@ -214,6 +207,19 @@ function loadingAnimation() {
     process.stdout.write(chalk.yellowBright(`Loading csv file ${dots}`));
   }, 500);
   return animation;
+}
+
+//-----------function to log output in a box----------
+function logWithBox(header, str) {
+  console.log(
+    boxen(
+      `${chalk.redBright.bold.underline(header)}\n\n ${chalk.whiteBright(str)}`,
+      {
+        padding: 1,
+        borderStyle: 'double',
+      }
+    )
+  );
 }
 
 //-------------helper function to get balance------------
@@ -250,6 +256,7 @@ promise
     console.log(chalk.blue.bold('CSV file read and processed !'));
     cumulativeBalances = results;
     latestBalance = cumulativeBalance;
+    // console.log(cumulativeBalances);
     //continue to ask commands after reading csv
     askForCommand();
   })

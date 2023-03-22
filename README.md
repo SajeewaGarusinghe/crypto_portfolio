@@ -32,10 +32,10 @@ return the latest portfolio value per token in USD
 
 return the latest portfolio value for that token in USD
 
-##### III) date --date=2018/03/20
+##### III) date --date=2019/10/20
 
 return the portfolio value per token in USD on that date
 
-##### IV) both --date=2018/03/20 --token=ETH
+##### IV) both --date=2019/10/20 --token=ETH
 
 return the portfolio value of that token in USD on that date
