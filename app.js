@@ -22,42 +22,19 @@ const rl = readline.createInterface({
 
 function askForCommand() {
   rl.question(
-    chalk.green(
-      "Enter a command 'latest','token','date' or 'both' and relevant arguments: "
-    ),
+    chalk.green("Enter command 'latest' or 'date' with relevant arguments: "),
     (command) => {
       const argv = yargs
-        .command(
-          'latest',
-          'Log the latest portfolio value per token in USD',
-          {}
-        )
-
-        .command(
-          'token',
-          'log the latest portfolio value for given token in USD',
-          {
-            token: {
-              describe: 'lattest balance required token',
-              //   demandOption: true,
-              type: 'String',
-            },
-          }
-        )
+        .command('latest', 'Log the latest portfolio value per token in USD', {
+          token: {
+            describe: 'lattest balance required token',
+            //   demandOption: true,
+            type: 'String',
+          },
+        })
         .command(
           'date',
           'log the portfolio value per token in USD on that date',
-          {
-            date: {
-              describe: 'latest balance required date',
-              //   demandOption: true,
-              type: 'String',
-            },
-          }
-        )
-        .command(
-          'both',
-          'log the portfolio value of that token in USD on that date',
           {
             token: {
               describe: 'lattest balance required token',
@@ -76,42 +53,28 @@ function askForCommand() {
         .parse(command);
 
       if (argv._[0] === 'latest') {
-        // console.log('op 1');
-        option1();
-        // console.log(latestBalance);
-      } else if (argv._[0] === 'token') {
-        // console.log('op 2');
+        console.log(argv.token);
         if (argv.token) {
-          // console.log(argv.token);
-          option2(argv.token);
+          if (argv.token == true) {
+            logError(
+              'Invalid Token. type valid token:  latest --token=<token>'
+            );
+            askForCommand();
+          } else {
+            option2(argv.token);
+          }
         } else {
-          console.log(chalk.red('Invalid parameters. Type --token=<token>'));
-          askForCommand();
+          option1();
         }
       } else if (argv._[0] === 'date') {
-        // console.log('op 3');
-
-        if (argv.date) {
-          // console.log(argv.date);
-          option3(argv.date);
+        if (argv.date && isValidDate(argv.date)) {
+          if (argv.token) {
+            option4(argv.date, argv.token);
+          } else {
+            option3(argv.date);
+          }
         } else {
-          console.log(
-            chalk.red('Invalid parameters. Type:  date --date=<date>')
-          );
-          askForCommand();
-        }
-      } else if (argv._[0] === 'both') {
-        // console.log('op 4');
-        if (argv.token && argv.date) {
-          // console.log(argv.token);
-          // console.log(argv.date);
-          option4(argv.date, argv.token);
-        } else {
-          console.log(
-            chalk.red(
-              'Invalid parameters. Type:  both --token=<token> --date=<date>'
-            )
-          );
+          logError('Invalid Date. type valid date:  date --date=<date>');
           askForCommand();
         }
       } else if (argv._[0] === 'close') {
@@ -119,10 +82,8 @@ function askForCommand() {
         rl.close();
         process.exit(1);
       } else {
-        console.log(
-          chalk.red(
-            "Invalid command. Type 'latest','token','date' or 'both' and relevant arguments"
-          )
+        logError(
+          "Invalid command.Insert 'latest' or 'date' with relevant arguments"
         );
         askForCommand();
       }
@@ -138,23 +99,33 @@ async function option1() {
     tokens += token + ',';
   }
   const usdRates = await getCryptoExchangeRateMulti(tokens);
-  let portfolioValueInUSD = '';
-  for (let token in latestBalance) {
-    portfolioValueInUSD += `${token}: ${(
-      latestBalance[token] * usdRates[token]
-    ).toFixed(1)} $\n`;
+  if (usdRates) {
+    let portfolioValueInUSD = '';
+    for (let token in latestBalance) {
+      portfolioValueInUSD += `${token}: ${(
+        latestBalance[token] * usdRates[token]
+      ).toFixed(1)} $\n`;
+    }
+
+    logWithBox('Latest Balance', portfolioValueInUSD);
   }
 
-  logWithBox('Latest Balance', portfolioValueInUSD);
   askForCommand();
 }
 //----------option-2-----------------
 
 async function option2(token) {
-  token = token.toUpperCase();
+  token = token.toString().toUpperCase();
   const usdRate = await getCryptoExchangeRateSingle(token);
-  let portfolioValueInUSD = (latestBalance[token] * usdRate).toFixed(1) + ' $';
-  logWithBox(`Latest ${token} Balance `, portfolioValueInUSD);
+  if (usdRate) {
+    let portfolioValueInUSD = '0.0 $';
+    if (latestBalance[token]) {
+      portfolioValueInUSD = (latestBalance[token] * usdRate).toFixed(1) + ' $';
+    }
+
+    logWithBox(`Latest ${token} Balance `, portfolioValueInUSD);
+  }
+
   askForCommand();
 }
 
@@ -175,24 +146,33 @@ async function option3(dateString) {
       token,
       timeStamp
     );
-    portfolioValueInUSD += `${token}: ${(
-      balance[token] * usd_rates[token]
-    ).toFixed(1)} $\n`;
+    if (usd_rates[token]) {
+      portfolioValueInUSD += `${token}: ${(
+        balance[token] * usd_rates[token]
+      ).toFixed(1)} $\n`;
+    }
   }
-  logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
+  if (portfolioValueInUSD != '') {
+    logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
+  }
   askForCommand();
 }
 
 //----------option-4-----------------
 async function option4(dateString, token) {
-  token = token.toUpperCase();
+  token = token.toString().toUpperCase();
   const balance = getBalance(dateString, token);
   const [year, month, day] = dateString.split('/');
   const dateObject = new Date(`${year}-${month}-${day}`);
   const timeStamp = dateObject.getTime();
+  // console.log('dateObject', dateObject);
+  // console.log('timestamp', timeStamp);
   const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
-  let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
-  logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+
+  if (usdRate) {
+    let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
+    logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+  }
   askForCommand();
 }
 
@@ -204,7 +184,7 @@ function loadingAnimation() {
     readline.cursorTo(process.stdout, 0);
     i = (i + 1) % 4;
     const dots = new Array(i + 1).join('.');
-    process.stdout.write(chalk.yellowBright(`Loading csv file ${dots}`));
+    process.stdout.write(chalk.yellowBright(`Loading csv ${dots}`));
   }, 500);
   return animation;
 }
@@ -220,6 +200,12 @@ function logWithBox(header, str) {
       }
     )
   );
+}
+
+//---------Error meassage print function----------------
+
+function logError(err) {
+  console.log(chalk.red(err));
 }
 
 //-------------helper function to get balance------------
@@ -238,11 +224,29 @@ function getBalance(dateString, token) {
   }
 
   if (token) {
-    token = token.toUpperCase();
-    return cumulativeBalances[nearestDate][token];
+    token = token.toString().toUpperCase();
+    if (cumulativeBalances[nearestDate][token]) {
+      return cumulativeBalances[nearestDate][token];
+    } else {
+      return 0;
+    }
   } else {
     return cumulativeBalances[nearestDate];
   }
+}
+
+//-------function to check date format is correct--------
+
+function isValidDate(str) {
+  const regex = /^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])$/;
+  const [year, month, day] = str.split('/').map(Number);
+  const date = new Date(year, month - 1, day);
+  return (
+    regex.test(str) &&
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 // Start loading animation

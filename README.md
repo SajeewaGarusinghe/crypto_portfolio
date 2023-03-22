@@ -16,6 +16,8 @@ ATTEMPT IS TO CREATE NODE APPLICATION TO READ FROM LARGE CSV FILE AND PROCESS TH
 
 #### npm install boxen@5.1.2
 
+ 
+
 ### Application run instructions
 
 #### 1) run node app.js
@@ -28,7 +30,7 @@ This will take some time depending on your pc specifications.
 
 return the latest portfolio value per token in USD
 
-##### II) token --token=BTC
+##### II) latest --token=BTC
 
 return the latest portfolio value for that token in USD
 
@@ -36,6 +38,6 @@ return the latest portfolio value for that token in USD
 
 return the portfolio value per token in USD on that date
 
-##### IV) both --date=2019/10/20 --token=ETH
+##### IV) date --date=2019/10/20 --token=ETH
 
 return the portfolio value of that token in USD on that date

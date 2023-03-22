@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const numCPUs = parseInt(os.cpus().length / 2) || 4;
-const upto = 30000000;
+const upto = 30000;
 
 const balanceOnDates = {};
 
@@ -81,7 +81,7 @@ function readCsvFile(filePath) {
           });
 
           const end = new Date() - startTime;
-          console.log('initial Execution time: %ds', end / 1000);
+          console.log('\ninitial Execution time: %ds', end / 1000);
           resolve({ results: cumulativeBalances, cumulativeBalance });
         }
       });
