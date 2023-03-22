@@ -1,7 +1,9 @@
 const { Worker } = require('worker_threads');
 const fs = require('fs');
-
 const path = require('path');
+const os = require('os');
+const numCPUs = parseInt(os.cpus().length / 2) || 4;
+const upto = 30000000;
 
 const balanceOnDates = {};
 
@@ -9,8 +11,6 @@ const balanceOnDates = {};
 function readCsvFile(filePath) {
   return new Promise((resolve, reject) => {
     const startTime = new Date();
-    const numCPUs = 6;
-    const upto = 300000;
     const range = parseInt(upto / numCPUs);
     const addEnd = upto % numCPUs;
 
@@ -82,8 +82,6 @@ function readCsvFile(filePath) {
 
           const end = new Date() - startTime;
           console.log('initial Execution time: %ds', end / 1000);
-          // console.log(cumulativeBalance);
-
           resolve({ results: cumulativeBalances, cumulativeBalance });
         }
       });

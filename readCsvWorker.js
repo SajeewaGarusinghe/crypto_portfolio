@@ -5,7 +5,6 @@ const { parse } = require('csv-parse');
 const { filePath, fromLine, toLine } = workerData;
 
 let balanceOnDate = {};
-// let cumulativeBalance = {};
 
 fs.createReadStream(filePath)
   .pipe(parse({ delimiter: ',', from_line: fromLine, to_line: toLine }))
