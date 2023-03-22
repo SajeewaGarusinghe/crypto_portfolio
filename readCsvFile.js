@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const numCPUs = parseInt(os.cpus().length / 2) || 4;
-const upto = 35000000;
+const upto = 30000000; //application is currently optimize for reading this num of records.that doesn't mean it only read upto this num of records
 
 const balanceOnDates = {};
 
@@ -12,7 +12,7 @@ function readCsvFile(filePath) {
   return new Promise((resolve, reject) => {
     const startTime = new Date();
     const range = parseInt(upto / numCPUs);
-    const addEnd = upto % numCPUs;
+    // const addEnd = upto % numCPUs;
 
     let start = 2;
     let end = range;
@@ -32,7 +32,8 @@ function readCsvFile(filePath) {
         temp = end;
       }
       if (i == numCPUs) {
-        end += addEnd;
+        // end += addEnd;
+        end = undefined; //by doing this we can expand last worker to read all the left data
       }
 
       const worker = new Worker(path.join(__dirname, 'readCsvWorker.js'), {
@@ -54,7 +55,6 @@ function readCsvFile(filePath) {
       });
 
       worker.on('error', (err) => {
-        // console.error('>>>>hi',err);
         reject(err);
       });
 

@@ -294,7 +294,7 @@ promise
     console.log(chalk.blue.bold('CSV file read and processed !'));
     cumulativeBalances = results;
     latestBalance = cumulativeBalance;
-    // console.log(cumulativeBalances);
+    // console.log(cumulativeBalance);
     //continue to ask commands after reading csv
     askForCommand();
   })
