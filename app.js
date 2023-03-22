@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const readline = require('readline');
 const yargs = require('yargs');
 const boxen = require('boxen');
+const { startupTable } = require('./startupTable');
 
 const { readCsvFile } = require('./readCsvFile');
 const {
@@ -21,74 +22,70 @@ const rl = readline.createInterface({
 });
 
 function askForCommand() {
-  rl.question(
-    chalk.green("Enter command 'latest' or 'date' with relevant arguments: "),
-    (command) => {
-      const argv = yargs
-        .command('latest', 'Log the latest portfolio value per token in USD', {
+  rl.question(chalk.green('Please Enter command : '), (command) => {
+    const argv = yargs
+      .command('latest', 'Log the latest portfolio value per token in USD', {
+        token: {
+          describe: 'lattest balance required token',
+          //   demandOption: true,
+          type: 'String',
+        },
+      })
+      .command(
+        'date',
+        'log the portfolio value per token in USD on that date',
+        {
           token: {
             describe: 'lattest balance required token',
             //   demandOption: true,
             type: 'String',
           },
-        })
-        .command(
-          'date',
-          'log the portfolio value per token in USD on that date',
-          {
-            token: {
-              describe: 'lattest balance required token',
-              //   demandOption: true,
-              type: 'String',
-            },
-            date: {
-              describe: 'latest balance required date',
-              //   demandOption: true,
-              type: 'String',
-            },
-          }
-        )
-        .command('close', 'close the application', {})
-        .help()
-        .parse(command);
+          date: {
+            describe: 'latest balance required date',
+            //   demandOption: true,
+            type: 'String',
+          },
+        }
+      )
+      .command('close', 'close the application', {})
+      .help()
+      .parse(command);
 
-      if (argv._[0] === 'latest') {
-        console.log(argv.token);
-        if (argv.token) {
-          if (argv.token == true) {
-            logError(
-              'Invalid Token. type valid token:  latest --token=<token>'
-            );
-            askForCommand();
-          } else {
-            option2(argv.token);
-          }
-        } else {
-          option1();
-        }
-      } else if (argv._[0] === 'date') {
-        if (argv.date && isValidDate(argv.date)) {
-          if (argv.token) {
-            option4(argv.date, argv.token);
-          } else {
-            option3(argv.date);
-          }
-        } else {
-          logError('Invalid Date. type valid date:  date --date=<date>');
+    if (argv._[0] === 'latest') {
+      // console.log(argv.token);
+      if (argv.token) {
+        if (argv.token == true) {
+          logError('Invalid Token. type valid token:  latest --token=<token>');
           askForCommand();
+        } else {
+          option2(argv.token);
         }
-      } else if (argv._[0] === 'close') {
-        console.log('application closing ...');
-        rl.close();
-        process.exit(1);
       } else {
-        logError(
-          "Invalid command.Insert 'latest' or 'date' with relevant arguments"
-        );
+        option1();
+      }
+    } else if (argv._[0] === 'date') {
+      // console.log(argv.date);
+      if (argv.date && argv.date != true && isValidDate(argv.date)) {
+        if (argv.token) {
+          option4(argv.date, argv.token);
+        } else {
+          option3(argv.date);
+        }
+      } else {
+        logError('Invalid Date. type valid date:  date --date=<date>');
         askForCommand();
       }
+    } else if (argv._[0] === 'close') {
+      console.log('application closing ...');
+      rl.close();
+      process.exit(1);
+    } else {
+      logError(
+        "Invalid command.Insert 'latest' or 'date' with relevant arguments"
+      );
+      askForCommand();
     }
-  );
+  });
 }
 
 //----------option-1-----------------
@@ -133,28 +130,32 @@ async function option2(token) {
 
 async function option3(dateString) {
   const balance = getBalance(dateString);
-  let usd_rates = {};
 
-  const [year, month, day] = dateString.split('/');
-  const dateObject = new Date(`${year}-${month}-${day}`);
-  const timeStamp = dateObject.getTime();
+  if (balance) {
+    let usd_rates = {};
 
-  let tokens = '';
-  let portfolioValueInUSD = '';
-  for (let token in balance) {
-    usd_rates[token] = await getCryptoExchangeRateSingleHistoric(
-      token,
-      timeStamp
-    );
-    if (usd_rates[token]) {
-      portfolioValueInUSD += `${token}: ${(
-        balance[token] * usd_rates[token]
-      ).toFixed(1)} $\n`;
+    const [year, month, day] = dateString.split('/');
+    const dateObject = new Date(`${year}-${month}-${day}`);
+    const timeStamp = dateObject.getTime();
+
+    let tokens = '';
+    let portfolioValueInUSD = '';
+    for (let token in balance) {
+      usd_rates[token] = await getCryptoExchangeRateSingleHistoric(
+        token,
+        timeStamp
+      );
+      if (usd_rates[token]) {
+        portfolioValueInUSD += `${token}: ${(
+          balance[token] * usd_rates[token]
+        ).toFixed(1)} $\n`;
+      }
+    }
+    if (portfolioValueInUSD != '') {
+      logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
     }
   }
-  if (portfolioValueInUSD != '') {
-    logWithBox(`${dateString} : Total Balance`, portfolioValueInUSD);
-  }
+
   askForCommand();
 }
 
@@ -162,17 +163,20 @@ async function option3(dateString) {
 async function option4(dateString, token) {
   token = token.toString().toUpperCase();
   const balance = getBalance(dateString, token);
-  const [year, month, day] = dateString.split('/');
-  const dateObject = new Date(`${year}-${month}-${day}`);
-  const timeStamp = dateObject.getTime();
-  // console.log('dateObject', dateObject);
-  // console.log('timestamp', timeStamp);
-  const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
+  if (balance) {
+    const [year, month, day] = dateString.split('/');
+    const dateObject = new Date(`${year}-${month}-${day}`);
+    const timeStamp = dateObject.getTime();
+    // console.log('dateObject', dateObject);
+    // console.log('timestamp', timeStamp);
+    const usdRate = await getCryptoExchangeRateSingleHistoric(token, timeStamp);
 
-  if (usdRate) {
-    let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
-    logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+    if (usdRate) {
+      let portfolioValueInUSD = (balance * usdRate).toFixed(1) + ' $';
+      logWithBox(`${dateString} : ${token} Balance `, portfolioValueInUSD);
+    }
   }
+
   askForCommand();
 }
 
@@ -223,15 +227,23 @@ function getBalance(dateString, token) {
     }
   }
 
-  if (token) {
-    token = token.toString().toUpperCase();
-    if (cumulativeBalances[nearestDate][token]) {
-      return cumulativeBalances[nearestDate][token];
+  if (nearestDate) {
+    if (token) {
+      token = token.toString().toUpperCase();
+      if (
+        cumulativeBalances[nearestDate] &&
+        cumulativeBalances[nearestDate][token]
+      ) {
+        return cumulativeBalances[nearestDate][token];
+      } else {
+        return 0;
+      }
     } else {
-      return 0;
+      return cumulativeBalances[nearestDate];
     }
   } else {
-    return cumulativeBalances[nearestDate];
+    logError('No Transactions prior to the date you entered');
+    return undefined;
   }
 }
 
@@ -249,6 +261,9 @@ function isValidDate(str) {
   );
 }
 
+//showing helper details
+startupTable();
+
 // Start loading animation
 const animation = loadingAnimation();
 
@@ -264,6 +279,21 @@ promise
     //continue to ask commands after reading csv
     askForCommand();
   })
+  //error Handling for reading csv file
   .catch((error) => {
-    console.error(error);
+    if (error.code == 'ENOENT') {
+      logWithBox(
+        "application can't find the csv file",
+        `Please make sure the csv file with the records, ${chalk.blue(
+          'transactions.csv'
+        )} file available in ${chalk.blue(__dirname)} path and try again !`
+      );
+    } else {
+      logWithBox(
+        'Error occurred in csv file',
+        'please make sure the csv file is correct'
+      );
+      // console.error(error);
+    }
+    process.exit(1);
   });
