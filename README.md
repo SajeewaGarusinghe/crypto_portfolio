@@ -1,46 +1,49 @@
 ﻿# Table of Contents
 
-### [**1.** **Introduction to Crypto Portfolio Command line Programme**](#_toc130486827)\*\*
 
-### [**2.** **How to use**](#_toc130486828)
+<!--ts-->
+   * [**1.** **Introduction to Crypto Portfolio Command line Programme](#_toc130486827)\*\*
 
-### [3. Language Stack and packages used](#_toc130486829)
+   * [**2.** **How to use**](#_toc130486828)
 
-#### [a. Node.js:](#_toc130486830)
+   * [3. Language Stack and packages used](#_toc130486829)
 
-#### [b. Axios package:](#_toc130486831)
+        * [a. Node.js:](#_toc130486830)
 
-#### [c. Chalk@4.1.2 package:](#_toc130486832)
+        * [b. Axios package:](#_toc130486831)
 
-#### [d. Yargs package:](#_toc130486833)
+        * [c. Chalk@4.1.2 package:](#_toc130486832)
 
-#### [e. Boxen@5.1.2 package:](#_toc130486834)
+        * [d. Yargs package:](#_toc130486833)
 
-#### [f. Csv-parse package:](#_toc130486835)
+        * [e. Boxen@5.1.2 package:](#_toc130486834)
 
-#### [g. Console-table-printer package:](#_toc130486836)
+        * [f. Csv-parse package:](#_toc130486835)
 
-#### [h. Nodemon package:](#_toc130486837)
+        * [g. Console-table-printer package:](#_toc130486836)
 
-### [**4.** **Various design decisions**](#_toc130486838)
+        * [h. Nodemon package:](#_toc130486837)
 
-#### [a. First Approach](#_toc130486839)
+   * [**4.** **Various design decisions**](#_toc130486838)
 
-#### [b. Second Approach](#_toc130486840)
+        * [a. First Approach](#_toc130486839)
 
-### [**5.** **Error Handling**](#_toc130486841)
+        * [b. Second Approach](#_toc130486840)
 
-#### [a. When reading csv file](#_toc130486842)
+   * [**5.** **Error Handling**](#_toc130486841)
 
-#### [b. When interact with the user for commands](#_toc130486843)
+        * [a. When reading csv file](#_toc130486842)
 
-#### [c. When requesting data from crypto compare using axios](#_toc130486844)
+        * [b. When interact with the user for commands](#_toc130486843)
 
-### [**6.** **Glossary**](#_toc130486845)
+        * [c. When requesting data from crypto compare using axios](#_toc130486844)
 
-#### [a. Worker threads in Node js](#_toc130486846)
+   * [**6.** **Glossary**](#_toc130486845)
 
-#### [b. Libuv](#_toc130486847)
+        * [a. Worker threads in Node js](#_toc130486846)
+
+        * [b. Libuv](#_toc130486847)
+<!--te-->
 
 ## <a name="_toc130486827"></a>**1. Introduction to Crypto Portfolio Command line Programme**
 
