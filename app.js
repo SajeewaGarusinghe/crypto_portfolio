@@ -22,7 +22,7 @@ const rl = readline.createInterface({
 });
 
 //this function will work to take the inputs from the user while mapping them to different options
-function askForCommand() {
+const askForCommand = () => {
   rl.question(chalk.green('Please Enter command : '), (command) => {
     const argv = yargs
       .command('latest', 'Log the latest portfolio value per token in USD', {
@@ -79,7 +79,7 @@ function askForCommand() {
     } else if (argv._[0] === 'close') {
       console.log('application closing ...');
       rl.close();
-      process.exit(1);//process exit on close command
+      process.exit(1); //process exit on close command
     } else {
       logError(
         "Invalid command.Insert 'latest' or 'date' with relevant arguments"
@@ -87,11 +87,11 @@ function askForCommand() {
       askForCommand();
     }
   });
-}
+};
 
 //----------option-1-----------------
 
-async function option1() {
+const option1 = async () => {
   let tokens = '';
   for (let token in latestBalance) {
     tokens += token + ',';
@@ -109,10 +109,10 @@ async function option1() {
   }
 
   askForCommand();
-}
+};
 //----------option-2-----------------
 
-async function option2(token) {
+const option2 = async (token) => {
   token = token.toString().toUpperCase();
   const usdRate = await getCryptoExchangeRateSingle(token);
   if (usdRate) {
@@ -125,11 +125,11 @@ async function option2(token) {
   }
 
   askForCommand();
-}
+};
 
 //----------option-3-----------------
 
-async function option3(dateString) {
+const option3 = async (dateString) => {
   const balance = getBalance(dateString);
 
   if (balance) {
@@ -160,10 +160,10 @@ async function option3(dateString) {
   }
 
   askForCommand();
-}
+};
 
 //----------option-4-----------------
-async function option4(dateString, token) {
+const option4 = async (dateString, token) => {
   token = token.toString().toUpperCase();
   const balance = getBalance(dateString, token);
   if (balance) {
@@ -187,20 +187,20 @@ async function option4(dateString, token) {
   }
 
   askForCommand();
-}
+};
 
 //------------get TimeStamp---------------
 //this will return the timestamp in seconds for date string in format YYYY/MM/DD
-function getTimestamp(dateString) {
+const getTimestamp = (dateString) => {
   const [year, month, day] = dateString.split('/');
   const dateObject = new Date(`${year}-${month}-${day}`);
   const timeStamp = dateObject.getTime() / 1000;
   return timeStamp;
-}
+};
 
 //------------loading Animation-----------
 //this is a animation to show while initial csv file reading finish
-function loadingAnimation() {
+const loadingAnimation = () => {
   let i = 0;
   const animation = setInterval(() => {
     readline.cursorTo(process.stdout, 0);
@@ -209,11 +209,11 @@ function loadingAnimation() {
     process.stdout.write(chalk.yellowBright(`Loading csv ${dots}`));
   }, 500);
   return animation;
-}
+};
 
 //-----------function to log output in a box----------
 //this is function to output result in a box
-function logWithBox(header, str) {
+const logWithBox = (header, str) => {
   console.log(
     boxen(
       `${chalk.redBright.bold.underline(header)}\n\n ${chalk.whiteBright(str)}`,
@@ -223,17 +223,17 @@ function logWithBox(header, str) {
       }
     )
   );
-}
+};
 
 //---------Error meassage print function----------------
 //this is function to log errors with certain styles
-function logError(err) {
+const logError = (err) => {
   console.log(chalk.red(err));
-}
+};
 
 //-------------helper function to get balance------------
 //this is helper function to op1 & op2 to get relavant dates token balance
-function getBalance(dateString, token) {
+const getBalance = (dateString, token) => {
   const keys = Object.keys(cumulativeBalances);
   const enteredDate = new Date(dateString);
   let nearestDate;
@@ -264,11 +264,11 @@ function getBalance(dateString, token) {
     logError('No Transactions prior to the date you entered');
     return undefined;
   }
-}
+};
 
 //-------function to check date format is correct--------
 //this is to validate user input dates in the format YYYY/MM/DD
-function isValidDate(str) {
+const isValidDate = (str) => {
   const regex = /^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])$/;
   const [year, month, day] = str.split('/').map(Number);
   const date = new Date(year, month - 1, day);
@@ -278,7 +278,7 @@ function isValidDate(str) {
     date.getMonth() === month - 1 &&
     date.getDate() === day
   );
-}
+};
 
 //------function to log initial instructions--------------
 
@@ -334,5 +334,5 @@ promise
       );
       // console.error(error);
     }
-    process.exit(1);//process exit on error while reading csv file
+    process.exit(1); //process exit on error while reading csv file
   });

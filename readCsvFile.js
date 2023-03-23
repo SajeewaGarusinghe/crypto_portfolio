@@ -9,7 +9,7 @@ const upto = 30000000; //application is currently optimize for reading this num 
 const balanceOnDates = {};
 
 // Function that reads a CSV file and processes the data
-function readCsvFile(filePath) {
+const readCsvFile = (filePath) => {
   return new Promise((resolve, reject) => {
     const startTime = new Date();
     const range = parseInt(upto / numCPUs);
@@ -92,7 +92,7 @@ function readCsvFile(filePath) {
       });
     }
   });
-}
+};
 
 module.exports = {
   readCsvFile,

@@ -1,6 +1,6 @@
 const { Table } = require('console-table-printer');
 
-function startupTable() {
+const startupTable = () => {
   const p = new Table();
   p.addRow(
     {
@@ -20,7 +20,7 @@ function startupTable() {
     },
     { color: 'yellow' }
   );
-  // p.addRow({ option: 2, text: 'green gemuse', value: 20.0 }, { color: 'green' });
+
   p.addRow(
     {
       Option: 3,
@@ -49,7 +49,7 @@ function startupTable() {
     { color: 'yellow' }
   );
   p.printTable();
-}
+};
 
 module.exports = {
   startupTable,
