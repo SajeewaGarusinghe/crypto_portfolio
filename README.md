@@ -68,7 +68,7 @@ The data includes timestamps, transaction types (DEPOSIT or WITHDRAW), tokens (B
 npm install
 ```
 
-Important:
+### 🔥Important:
 
 Make sure transactions.csv file is saved in **crypto portfolio** folder.
 
@@ -153,19 +153,19 @@ To avoid the drawback of the first approach I have decide to go with following a
 
 1. To return the latest portfolio value per token in USD, the program will search for the latest date key in the object and retrieve the corresponding token values. Then, it will request the latest USD rates for each token from the cryptocompare API by using the inner object keys. The program will multiply the token values by their respective USD rates to obtain the portfolio value per token in USD.
 
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.004.png)
+      ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.004.png)
 
 2. To return the latest portfolio value for a specific token in USD, the program will search for the latest date key in the object and retrieve the token balance for the specified token. It will then request the latest USD rate for that token from the cryptocompare API and multiply the token balance by the USD rate to obtain the portfolio value of the token in USD.
 
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.005.png)
+      ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.005.png)
 
 3. To return the portfolio value per token in USD on a specific date, the program will search for the date key in the object and retrieve the corresponding token values. If the date key is not available, the program will use the latest available date before the specified date. The program will then request the historical USD rates for each token from the cryptocompare API and multiply the token values by their respective USD rates to obtain the portfolio value per token in USD on the specified date.
 
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.006.png)
+      ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.006.png)
 
 4. To return the portfolio value of a specific token in USD on a specific date, the program will search for the date key in the object and retrieve the token balance for the specified token. If the date key is not available, the program will use the latest available date before the specified date. The program will then request the historical USD rate for the specified token from the cryptocompare API and multiply the token balance by the USD rate to obtain the portfolio value of the token in USD on the specified date.
 
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.007.png)
+      ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.007.png)
 
 - One of the major problem:
 
