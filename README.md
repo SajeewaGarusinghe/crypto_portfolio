@@ -1,48 +1,48 @@
-﻿# Table of Contents
+﻿# 🔥 Table of Contents
 
 
 <!--ts-->
-   * [**1.** **Introduction to Crypto Portfolio Command line Programme](#_toc130486827)\*\*
+   * [**Introduction to Crypto Portfolio Command line Programme**](#_toc130486827)\*\*
 
-   * [**2.** **How to use**](#_toc130486828)
+   * [**How to use**](#_toc130486828)
 
-   * [3. Language Stack and packages used](#_toc130486829)
+   * [**Language Stack and packages used**](#_toc130486829)
 
-        * [a. Node.js:](#_toc130486830)
+        * [Node.js](#_toc130486830)
 
-        * [b. Axios package:](#_toc130486831)
+        * [Axios package](#_toc130486831)
 
-        * [c. Chalk@4.1.2 package:](#_toc130486832)
+        * [Chalk@4.1.2 package](#_toc130486832)
 
-        * [d. Yargs package:](#_toc130486833)
+        * [Yargs package](#_toc130486833)
 
-        * [e. Boxen@5.1.2 package:](#_toc130486834)
+        * [Boxen@5.1.2 package](#_toc130486834)
 
-        * [f. Csv-parse package:](#_toc130486835)
+        * [Csv-parse package](#_toc130486835)
 
-        * [g. Console-table-printer package:](#_toc130486836)
+        * [Console-table-printer package](#_toc130486836)
 
-        * [h. Nodemon package:](#_toc130486837)
+        * [Nodemon package](#_toc130486837)
 
-   * [**4.** **Various design decisions**](#_toc130486838)
+   * [**Various design decisions**](#_toc130486838)
 
-        * [a. First Approach](#_toc130486839)
+        * [First Approach](#_toc130486839)
 
-        * [b. Second Approach](#_toc130486840)
+        * [Second Approach](#_toc130486840)
 
-   * [**5.** **Error Handling**](#_toc130486841)
+   * [**Error Handling**](#_toc130486841)
 
-        * [a. When reading csv file](#_toc130486842)
+        * [When reading csv file](#_toc130486842)
 
-        * [b. When interact with the user for commands](#_toc130486843)
+        * [When interact with the user for commands](#_toc130486843)
 
-        * [c. When requesting data from crypto compare using axios](#_toc130486844)
+        * [When requesting data from crypto compare using axios](#_toc130486844)
 
-   * [**6.** **Glossary**](#_toc130486845)
+   * [**Glossary**](#_toc130486845)
 
-        * [a. Worker threads in Node js](#_toc130486846)
+        * [Worker threads in Node js](#_toc130486846)
 
-        * [b. Libuv](#_toc130486847)
+        * [Libuv](#_toc130486847)
 <!--te-->
 
 ## <a name="_toc130486827"></a>**1. Introduction to Crypto Portfolio Command line Programme**
