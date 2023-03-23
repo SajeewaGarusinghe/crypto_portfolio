@@ -46,30 +46,30 @@
 
 ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.001.png)
 
-`    `This is an attempt to create a program that manipulates a CSV file containing daily user transactions.
+This is an attempt to create a program that manipulates a CSV file containing daily user transactions.
 
-`    `The program should provide four types of results:
+The program should provide four types of results:
 
 - The latest portfolio value per token in USD (when no parameters are given)
 - The latest portfolio value for a specific token in USD (when a token is given)
 - The portfolio value per token in USD on a specific date (when a date is given)
 - The portfolio value of a specific token in USD on a specific date (when a date and token are given)
 
-`    `The data includes timestamps, transaction types (DEPOSIT or WITHDRAW), tokens (BTC, ETH, XRP), and token amounts.
+The data includes timestamps, transaction types (DEPOSIT or WITHDRAW), tokens (BTC, ETH, XRP), and token amounts.
 
-1. ## <a name="_toc130486828"></a>**How to use**
+## <a name="_toc130486828"></a>**1. How to use**
 
 - Download the repo and Install dependencies:
 
-`                    `npm install
+npm install
 
-`              `Important:
+Important:
 
-`              `Make sure transactions.csv file is saved in **crypto portfolio** folder.
+Make sure transactions.csv file is saved in **crypto portfolio** folder.
 
 - Run the application by using following command and then follow the instructions thereafter
 
-`              `npm start
+npm start
 
 ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.002.png)
 
