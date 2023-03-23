@@ -13,14 +13,15 @@ const {
 
 let animation;
 
-let cumulativeBalances = {};
-let latestBalance = {};
+let cumulativeBalances = {}; //keeping this global variable to hold all processed data after reading csv file
+let latestBalance = {}; //keeping this global variable to hold latest data after reading csv file
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+//this function will work to take the inputs from the user while mapping them to different options
 function askForCommand() {
   rl.question(chalk.green('Please Enter command : '), (command) => {
     const argv = yargs
@@ -78,7 +79,7 @@ function askForCommand() {
     } else if (argv._[0] === 'close') {
       console.log('application closing ...');
       rl.close();
-      process.exit(1);
+      process.exit(1);//process exit on close command
     } else {
       logError(
         "Invalid command.Insert 'latest' or 'date' with relevant arguments"
@@ -189,7 +190,7 @@ async function option4(dateString, token) {
 }
 
 //------------get TimeStamp---------------
-
+//this will return the timestamp in seconds for date string in format YYYY/MM/DD
 function getTimestamp(dateString) {
   const [year, month, day] = dateString.split('/');
   const dateObject = new Date(`${year}-${month}-${day}`);
@@ -198,7 +199,7 @@ function getTimestamp(dateString) {
 }
 
 //------------loading Animation-----------
-
+//this is a animation to show while initial csv file reading finish
 function loadingAnimation() {
   let i = 0;
   const animation = setInterval(() => {
@@ -211,6 +212,7 @@ function loadingAnimation() {
 }
 
 //-----------function to log output in a box----------
+//this is function to output result in a box
 function logWithBox(header, str) {
   console.log(
     boxen(
@@ -224,13 +226,13 @@ function logWithBox(header, str) {
 }
 
 //---------Error meassage print function----------------
-
+//this is function to log errors with certain styles
 function logError(err) {
   console.log(chalk.red(err));
 }
 
 //-------------helper function to get balance------------
-
+//this is helper function to op1 & op2 to get relavant dates token balance
 function getBalance(dateString, token) {
   const keys = Object.keys(cumulativeBalances);
   const enteredDate = new Date(dateString);
@@ -265,7 +267,7 @@ function getBalance(dateString, token) {
 }
 
 //-------function to check date format is correct--------
-
+//this is to validate user input dates in the format YYYY/MM/DD
 function isValidDate(str) {
   const regex = /^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])$/;
   const [year, month, day] = str.split('/').map(Number);
@@ -278,7 +280,7 @@ function isValidDate(str) {
   );
 }
 
-//function to log initial instructions
+//------function to log initial instructions--------------
 
 const initialInstructions = () => {
   console.log(chalk.red.underline('Welcome abroad !'));
@@ -312,11 +314,11 @@ promise
     console.log(chalk.blue.bold('CSV file read and processed !'));
     cumulativeBalances = results;
     latestBalance = cumulativeBalance;
-    // console.log(cumulativeBalance);
     //continue to ask commands after reading csv
     askForCommand();
   })
   //error Handling for reading csv file
+  //since the error pass via the returned promise
   .catch((error) => {
     if (error.code == 'ENOENT') {
       logWithBox(
@@ -332,5 +334,5 @@ promise
       );
       // console.error(error);
     }
-    process.exit(1);
+    process.exit(1);//process exit on error while reading csv file
   });

@@ -47,7 +47,7 @@
 
 ## <a name="_toc130486827"></a>**1. Introduction to Crypto Portfolio Command line Programme**
  
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.001.png)
+![](ss/main.png)
 
 This is an attempt to create a program that manipulates a CSV file containing daily user transactions.
 
@@ -78,7 +78,7 @@ Make sure transactions.csv file is saved in **crypto portfolio** folder.
 npm start
 ```
 
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.002.png)
+![](ss/b.png)
 
 Note:
 
@@ -170,6 +170,8 @@ To avoid the drawback of the first approach I have decide to go with following a
 - One of the major problem:
 
 While getting historic data is in crypto compare API data is not available beyond Sunday, July 18, 2010 12:00:00 AM GMT+05:30.beyond that date USD rates of crypto currencies are zero. (Of course since crypto not available beyond the particular time)
+
+![](ss/a.png)
 
 ![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.008.png)
 

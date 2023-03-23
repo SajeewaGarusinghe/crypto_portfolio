@@ -39,6 +39,15 @@ function startupTable() {
     },
     { color: 'yellow' }
   );
+  p.addRow(
+    {
+      Option: 5,
+      Commands: 'close  ',
+      Arguments: ' ',
+      Example: 'close',
+    },
+    { color: 'yellow' }
+  );
   p.printTable();
 }
 

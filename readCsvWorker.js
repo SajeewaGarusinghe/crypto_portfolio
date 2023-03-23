@@ -9,10 +9,11 @@ let balanceOnDate = {};
 fs.createReadStream(filePath)
   .pipe(parse({ delimiter: ',', from_line: fromLine, to_line: toLine }))
   .on('data', function (row) {
+    //create date key from timestamp received from csv
     const date = new Date(row[0] * 1000).toLocaleDateString('en-ZA');
 
+    //following done for in case of balanceOnDate[date] is not defined...otherwise error may occur
     if (!balanceOnDate[date]) {
-      // Initialize portfolio balance for this date
       balanceOnDate[date] = {};
     }
 
@@ -36,9 +37,12 @@ fs.createReadStream(filePath)
   })
 
   .on('end', function () {
+    //at the end of the assigned files reading worker will write that data to main
     parentPort.postMessage(balanceOnDate);
+    //clearing that memory
     balanceOnDate = {};
   })
+  //execute following if error occur while reading csv
   .on('error', function (error) {
     console.error(error.message);
   });

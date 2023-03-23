@@ -37,10 +37,12 @@ function readCsvFile(filePath) {
         end = undefined; //by doing this we can expand last worker to read all the left data
       }
 
+      //create new worker thread using worker_threads
       const worker = new Worker(path.join(__dirname, 'readCsvWorker.js'), {
         workerData: { filePath, fromLine: start, toLine: end },
       });
 
+      //following execute when certain worker has read complete and send those processed data back
       worker.on('message', (balanceOnDate) => {
         for (let date in balanceOnDate) {
           if (!balanceOnDates[date]) {
@@ -54,12 +56,13 @@ function readCsvFile(filePath) {
           }
         }
       });
-
+      //following execute when certain worker has error
       worker.on('error', (err) => {
         reject(err);
       });
-
+      //following execute when certain worker has done his work and exiting
       worker.on('exit', () => {
+        //following variable holds num of workers that have complete the work
         workerCompleted++;
 
         if (workerCompleted === numCPUs) {
@@ -83,6 +86,7 @@ function readCsvFile(filePath) {
 
           const end = new Date() - startTime;
           console.log('\ninitial Loading time: %ds', end / 1000);
+          //after reading and combining all the date by different threads send back the data to main thread
           resolve({ results: cumulativeBalances, cumulativeBalance });
         }
       });

@@ -3,6 +3,8 @@ const chalk = require('chalk');
 
 const API_KEY =
   'd9b6a02d8bda1f6dafd2fbd91a356f8fda25d349f48b3725e2ad8f8bd2364590';
+
+//this function is to get latest crypto usd rate for single coin
 const getCryptoExchangeRateSingle = async (forCurrency) => {
   forCurrency = forCurrency.toUpperCase();
 
@@ -22,6 +24,8 @@ const getCryptoExchangeRateSingle = async (forCurrency) => {
     return undefined;
   }
 };
+
+//this function is to get latest crypto usd rates for multiple coins
 const getCryptoExchangeRateMulti = async (forCurrencies) => {
   try {
     const response = await axios.get(
@@ -39,6 +43,7 @@ const getCryptoExchangeRateMulti = async (forCurrencies) => {
   }
 };
 
+//this function is to get historical crypto usd rate for single coin
 const getCryptoExchangeRateSingleHistoric = async (forCurrency, timestamp) => {
   forCurrency = forCurrency.toUpperCase();
 
