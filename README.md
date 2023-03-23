@@ -47,7 +47,7 @@
 
 ## <a name="_toc130486827"></a>**1. Introduction to Crypto Portfolio Command line Programme**
  
-![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.001.png){:height="auto" width="100%"}.
+![](ss/Aspose.Words.e9c3061a-2170-4f03-8719-b9d73390d86d.001.png)
 
 This is an attempt to create a program that manipulates a CSV file containing daily user transactions.
 
