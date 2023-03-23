@@ -1,46 +1,46 @@
 ﻿# Table of Contents
 
-[**1.** **Introduction to Crypto Portfolio Command line Programme**](#_toc130486827)\*\*
+### [**1.** **Introduction to Crypto Portfolio Command line Programme**](#_toc130486827)\*\*
 
-[**2.** **How to use**](#_toc130486828)
+### [**2.** **How to use**](#_toc130486828)
 
-[3. Language Stack and packages used](#_toc130486829)
+### [3. Language Stack and packages used](#_toc130486829)
 
-[a. Node.js:](#_toc130486830)
+#### [a. Node.js:](#_toc130486830)
 
-[b. Axios package:](#_toc130486831)
+#### [b. Axios package:](#_toc130486831)
 
-[c. Chalk@4.1.2 package:](#_toc130486832)
+#### [c. Chalk@4.1.2 package:](#_toc130486832)
 
-[d. Yargs package:](#_toc130486833)
+#### [d. Yargs package:](#_toc130486833)
 
-[e. Boxen@5.1.2 package:](#_toc130486834)
+#### [e. Boxen@5.1.2 package:](#_toc130486834)
 
-[f. Csv-parse package:](#_toc130486835)
+#### [f. Csv-parse package:](#_toc130486835)
 
-[g. Console-table-printer package:](#_toc130486836)
+#### [g. Console-table-printer package:](#_toc130486836)
 
-[h. Nodemon package:](#_toc130486837)
+#### [h. Nodemon package:](#_toc130486837)
 
-[**4.** **Various design decisions**](#_toc130486838)
+### [**4.** **Various design decisions**](#_toc130486838)
 
-[a. First Approach](#_toc130486839)
+#### [a. First Approach](#_toc130486839)
 
-[b. Second Approach](#_toc130486840)
+#### [b. Second Approach](#_toc130486840)
 
-[**5.** **Error Handling**](#_toc130486841)
+### [**5.** **Error Handling**](#_toc130486841)
 
-[a. When reading csv file](#_toc130486842)
+#### [a. When reading csv file](#_toc130486842)
 
-[b. When interact with the user for commands, user may enter wrong commands or arguments or both](#_toc130486843)
+#### [b. When interact with the user for commands](#_toc130486843)
 
-[c. When requesting data from crypto compare using axios](#_toc130486844)
+#### [c. When requesting data from crypto compare using axios](#_toc130486844)
 
-[**6.** **Glossary**](#_toc130486845)
+### [**6.** **Glossary**](#_toc130486845)
 
-[a. Worker threads in Node js](#_toc130486846)
+#### [a. Worker threads in Node js](#_toc130486846)
 
-[b. Libuv](#_toc130486847)
+#### [b. Libuv](#_toc130486847)
 
 ## <a name="_toc130486827"></a>**1. Introduction to Crypto Portfolio Command line Programme**
 
@@ -89,7 +89,7 @@ Node.js is an open-source server environment that allows developers to run JavaS
 
 ### <a name="_toc130486831"></a>b. Axios package
 
-` `Axios is a popular Promise-based HTTP client for JavaScript that can be used in both browser and Node.js environments. It provides an easy-to-use API for sending HTTP requests and handling responses, supporting features such as interceptors, request cancellation, and automatic JSON parsing.
+Axios is a popular Promise-based HTTP client for JavaScript that can be used in both browser and Node.js environments. It provides an easy-to-use API for sending HTTP requests and handling responses, supporting features such as interceptors, request cancellation, and automatic JSON parsing.
 
 ### <a name="_toc130486832"></a>c. Chalk@4.1.2 package
 
@@ -101,7 +101,7 @@ Yargs is a Node.js package that helps to build interactive command-line tools, b
 
 ### <a name="_toc130486834"></a>e. Boxen@5.1.2 package
 
-` `Boxen is a Node.js package that allows developers to create nicely formatted boxes in the console. It provides a simple way to create visually appealing terminal messages, complete with custom borders, colors, and other styling options.
+Boxen is a Node.js package that allows developers to create nicely formatted boxes in the console. It provides a simple way to create visually appealing terminal messages, complete with custom borders, colors, and other styling options.
 
 ### <a name="_toc130486835"></a>f. Csv-parse package
 
@@ -109,7 +109,7 @@ Csv-parse is a Node.js package that provides a way to parse CSV files and conver
 
 ### <a name="_toc130486836"></a>g. Console-table-printer package
 
-` `Console-table-printer is a Node.js package that allows developers to create tables in the console output. It provides an easy-to-use API for generating tables with customizable headers, footers, and cell styles.
+Console-table-printer is a Node.js package that allows developers to create tables in the console output. It provides an easy-to-use API for generating tables with customizable headers, footers, and cell styles.
 
 ### <a name="_toc130486837"></a>h. Nodemon package
 
