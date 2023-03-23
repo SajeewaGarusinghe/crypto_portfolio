@@ -11,7 +11,7 @@ const {
   getCryptoExchangeRateSingleHistoric,
 } = require('./apiCall');
 
-// const { loadingAnimation } = require('./loadingAnimation');
+let animation;
 
 let cumulativeBalances = {};
 let latestBalance = {};
@@ -278,13 +278,31 @@ function isValidDate(str) {
   );
 }
 
- 
-console.log(chalk.red.underline('Welcome abroad !'));
-//showing helper details
-startupTable();
+//function to log initial instructions
 
-// Start loading animation
-const animation = loadingAnimation();
+const initialInstructions = () => {
+  console.log(chalk.red.underline('Welcome abroad !'));
+
+  const text =
+    'This is Node.js CLI program to check portfolio value: You can go for following options\n1. Latest Portfolio per token in USD \n2. Latest Portfolio for a specific token in USD \n3. Portfolio per token in USD on a specific date \n4. Portfolio of a specific token in USD on a specific date \nRefer to the table below for commands';
+
+  let i = 0;
+  const intervalId = setInterval(() => {
+    process.stdout.write(chalk.yellow(text.charAt(i)));
+    i++;
+    if (i === text.length) {
+      clearInterval(intervalId);
+      process.stdout.write('\n');
+      //show the table
+      startupTable();
+      // Start loading animation
+      animation = loadingAnimation();
+    }
+  }, 50);
+};
+
+//showing helper details
+initialInstructions();
 
 //-----read the Csv content-----------
 const promise = readCsvFile('transactions.csv');
