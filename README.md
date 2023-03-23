@@ -41,3 +41,6 @@ return the portfolio value per token in USD on that date
 ##### IV) date --date=2019/10/20 --token=ETH
 
 return the portfolio value of that token in USD on that date
+
+
+UV_THREADPOOL_SIZE=64 node index.js

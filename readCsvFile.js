@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const numCPUs = parseInt(os.cpus().length / 2) || 4;
-const upto = 30000000; //application is currently optimize for reading this num of records.that doesn't mean it only read upto this num of records
 
+const upto = 30000000; //application is currently optimize for reading this num of records.that doesn't mean it only read upto this num of records
+// process.env.UV_THREADPOOL_SIZE = 8;
 const balanceOnDates = {};
 
 // Function that reads a CSV file and processes the data

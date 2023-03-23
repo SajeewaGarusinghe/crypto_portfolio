@@ -194,8 +194,6 @@ function getTimestamp(dateString) {
   const [year, month, day] = dateString.split('/');
   const dateObject = new Date(`${year}-${month}-${day}`);
   const timeStamp = dateObject.getTime() / 1000;
-  // console.log(timeStamp);
-
   return timeStamp;
 }
 
@@ -280,6 +278,8 @@ function isValidDate(str) {
   );
 }
 
+ 
+console.log(chalk.red.underline('Welcome abroad !'));
 //showing helper details
 startupTable();
 
